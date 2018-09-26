@@ -1,20 +1,55 @@
 #!/usr/bin/env python3 
 
 # quick search of a vocab
-# usage: ./vocabsearch {word}
+# usage: ./vocabsearch
 
 import sys
 import requests
 from bs4 import BeautifulSoup
 
-url = "https://www.vocabulary.com/dictionary/"+sys.argv[1]
-source = requests.get(url)
-data = source.text
-soup = BeautifulSoup(data,"html.parser")
 
-definition = str(soup.find('meta', attrs={'name':'description'})).split('=')[1][1:-6]
-if 'Try the world\'s fastest, smartest dictionary' in definition:
-	definition = "cant find this word :|"
-print("\n{}\n".format(definition))
+def usage(exit_code=0):
+	print('''\nUsage: {} word
+	-e: example sentences
+	-s: synonyms
+	-a: antonyms \n'''.format(sys.argv[0]))
+	sys.exit(exit_code)
 
+def definition(word):
+	url = "https://www.vocabulary.com/dictionary/"+word
+	source = requests.get(url)
+	data = source.text
+	soup = BeautifulSoup(data,"html.parser")
 
+	definition = str(soup.find('meta', attrs={'name':'description'})).split('=')[1][1:-6]
+	if 'Try the world\'s fastest, smartest dictionary' in definition:
+		definition = "cant find this word :|"
+	print("\n{}\n".format(definition))
+	sys.exit(0)
+
+def example(word):
+	print('in example')
+
+def synonym(word):
+	print('synonym')
+
+def antonym(word):
+	print('antonym')
+
+if __name__ == '__main__':
+	if len(sys.argv) == 1:
+		usage(0)
+	elif len(sys.argv) == 2:
+		definition(sys.argv[1])
+	else:
+		args = sys.argv[2:]
+		while len(args) and args[0].startswith('-') and len(args[0]) > 1:
+			arg = args.pop(0)
+			if arg == '-e':
+				example(sys.argv[1])
+			elif arg == '-s':
+				synonym(sys.argv[1])
+			elif arg == '-a':
+				antonym(sys.argv[1])
+			else:
+				usage(1)
