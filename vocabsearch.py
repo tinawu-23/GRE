@@ -28,8 +28,15 @@ def definition(word):
 	sys.exit(0)
 
 def example(word):
-	print('in example')
-
+	url = "https://wordsinasentence.com/{}-in-a-sentence/".format(word)
+	source = requests.get(url)
+	data = source.text
+	data = data[data.index("var txts = [")+14:]
+	for line in data.split('];')[0].split('\','):
+		if line.strip() != '\'' and line.strip() != '\'\'':
+			print(line.strip()[1:])
+			print('*')
+	
 def synonym(word):
 	print('synonym')
 
@@ -46,7 +53,9 @@ if __name__ == '__main__':
 		while len(args) and args[0].startswith('-') and len(args[0]) > 1:
 			arg = args.pop(0)
 			if arg == '-e':
+				print('\n*')
 				example(sys.argv[1])
+				print()
 			elif arg == '-s':
 				synonym(sys.argv[1])
 			elif arg == '-a':
