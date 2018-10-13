@@ -31,18 +31,43 @@ def example(word):
 	url = "https://wordsinasentence.com/{}-in-a-sentence/".format(word)
 	source = requests.get(url)
 	data = source.text
-	data = data[data.index("var txts = [")+14:]
+	try:
+		data = data[data.index("var txts = [")+14:]
+	except:
+		print('cant find sentences :(')
+		return 
 	for line in data.split('];')[0].split('\','):
 		if line.strip() != '\'' and line.strip() != '\'\'':
 			print(line.strip()[1:])
 			print('*')
 	
 def synonym(word):
-	print('synonym')
+	url = "https://www.thesaurus.com/browse/"+word
+	source = requests.get(url)
+	data = source.text
+	try:
+		data = data[data.index("\"pos\":\"adj\",\"synonyms\":[")+24:]
+		data = data[:data.index("],\"antonyms\":")]
+	except: 
+		print('\ncant find synonyms :|\n')
+		return 
+	for line in data.split('},'):
+		print(((line.split(',')[-1]).split(":")[-1]).replace("\"","").replace("}",""))
 
 def antonym(word):
-	print('antonym')
+	url = "https://www.thesaurus.com/browse/"+word
+	source = requests.get(url)
+	data = source.text
+	try:
+		data = data[data.index("}],\"antonyms\":")+15:]
+		data = data[:data.index("]}],\"synonyms\":[],\"antonyms\":[],")]
+	except:
+		print('\ncant find antonyms :|\n')
+		return
+	for line in data.split('},'):
+		print(((line.split(',')[-1]).split(":")[-1]).replace("\"","").replace("}",""))
 
+	
 if __name__ == '__main__':
 	if len(sys.argv) == 1:
 		usage(0)
