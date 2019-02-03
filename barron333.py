@@ -9,7 +9,8 @@ import time
 
 ## Get vocabs from source ##
 
-url = "https://www.vocabulary.com/lists/176985"
+#url = "https://www.vocabulary.com/lists/176985"
+url = "https://web.archive.org/web/20151230020635/https://www.vocabulary.com/lists/176985#view=notes"
 source = requests.get(url)
 data = source.text
 soup = BeautifulSoup(data,"html.parser")

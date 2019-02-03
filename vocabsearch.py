@@ -7,7 +7,6 @@ import sys
 import requests
 from bs4 import BeautifulSoup
 
-
 def usage(exit_code=0):
 	print('''\nUsage: {} word
 	-e: example sentences
@@ -65,7 +64,7 @@ def antonym(word):
 		print('\ncant find antonyms :|\n')
 		return
 	for line in data.split('},'):
-		print(((line.split(',')[-1]).split(":")[-1]).replace("\"","").replace("}",""))
+		print(((line.split(',')[-1]).split(":")[-1]).replace("\"","").replace("}", "").replace("%20", " ").replace("%27", "'"))
 
 	
 if __name__ == '__main__':
